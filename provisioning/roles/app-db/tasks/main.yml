@@ -92,7 +92,7 @@
   file: path=/app/etc/gunicorn state=directory
 
 - name: Configure gunicorn 
-  template: src=gunicorn.conf.j2 dest=/app/etc/gunicorn/conf.py
+  template: src=gunicorn/gunicorn.conf.j2 dest=/app/etc/gunicorn/conf.py
 
 
 # SETUP SUPERVISOR

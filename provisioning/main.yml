@@ -1,9 +1,13 @@
 ---
-- hosts: localhost 
-  remote_user: root
+- hosts: all 
   gather_facts: false
+  user: root 
+  sudo: yes 
   vars_files:
     - config.yml
+
+  roles:
+    - app-db
 
   # Deploy the codebase
   post_tasks:
@@ -38,9 +42,11 @@
 
     - name: Migrate models into database
       django_manage: virtualenv=/app/env/ app_path=/app/src/{{ project_name }}/ command=migrate
+      become_user: app
 
     - name: Collect static files
       django_manage: virtualenv=/app/env/ app_path=/app/src/{{ project_name }}/ command="collectstatic --noinput"
+      become_user: app
     
     - name: Restart gunicorn
       command: supervisorctl restart gunicorn
