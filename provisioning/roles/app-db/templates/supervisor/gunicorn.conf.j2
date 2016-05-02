@@ -1,0 +1,8 @@
+[program:gunicorn]
+command=/app/env/bin/gunicorn -c /app/etc/gunicorn/conf.py {{ project_name }}.wsgi
+directory=/app/src/{{ project_name }}
+user=app
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/supervisor/gunicorn/err.log
+stdout_logfile=/var/log/supervisor/gunicorn/out.log
