@@ -1,0 +1,49 @@
+---
+- hosts: localhost 
+  remote_user: root
+  gather_facts: false
+  vars_files:
+    - config.yml
+
+  roles:
+    - app-db
+
+  # Deploy the codebase
+  post_tasks:
+    - name: ensure the env_vars file is present
+      file: path=/app/env_vars state=touch owner=app group=worker
+
+    - name: add DATABASE_NAME to environment variables file 
+      lineinfile: dest=/app/env_vars
+                  line="DATABASE_NAME={{ database_name }}"
+                  insertafter=EOF
+
+    - name: add DATABASE_USER to environement variables file 
+      lineinfile: dest=/app/env_vars
+                  line="DATABASE_USER={{ database_user }}"
+                  insertafter=EOF
+
+    - name: add DATABASE_PASSWORD environment variables file 
+      lineinfile: dest=/app/env_vars
+                  line="DATABASE_PASSWORD={{ database_password }}"
+                  insertafter=EOF
+
+    - name: add DATABASE_HOST environment variables file 
+      lineinfile: dest=/app/env_vars
+                  line="DATABASE_HOST={{ database_host }}"
+                  insertafter=EOF
+
+    - name: Configure permissions again so they'll apply to the recently created directories
+      file: path=/app owner=app group=worker  mode="g+s" recurse=yes
+
+    - name: pip install requirements.txt
+      pip: virtualenv=/app/env requirements=/app/src/requirements.txt
+
+    - name: Migrate models into database
+      django_manage: virtualenv=/app/env/ app_path=/app/src/{{ project_name }}/ command=migrate
+
+    - name: Collect static files
+      django_manage: virtualenv=/app/env/ app_path=/app/src/{{ project_name }}/ command="collectstatic --noinput"
+    
+    - name: Restart gunicorn
+      command: supervisorctl restart gunicorn
