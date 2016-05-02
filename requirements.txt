@@ -1,3 +1,4 @@
 #Requirements for all projects
 django==1.9.5
 django-dotenv==1.4.1
+psycopg2==2.6.1
