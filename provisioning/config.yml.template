@@ -1,0 +1,8 @@
+# Set these variables in a config.yml file
+project_name:
+secret_key:
+debug:
+database_name:
+database_user:
+database_host:
+database_password:
