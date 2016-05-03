@@ -14,6 +14,16 @@
     - name: ensure the env_vars file is present
       file: path=/app/env_vars state=touch owner=app group=worker
 
+    - name: add SECRET_KEY to environment variables file 
+      lineinfile: dest=/app/env_vars
+                  line="SECRET_KEY={{ secret_key }}"
+                  insertafter=EOF
+
+    - name: add DEBUG to environment variables file 
+      lineinfile: dest=/app/env_vars
+                  line="DEBUG={{ debug }}"
+                  insertafter=EOF
+
     - name: add DATABASE_NAME to environment variables file 
       lineinfile: dest=/app/env_vars
                   line="DATABASE_NAME={{ database_name }}"
