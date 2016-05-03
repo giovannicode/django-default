@@ -1,6 +1,5 @@
 - name: run apt-get update
   apt: update_cache=yes
-
 - name: Install required system packages
   apt: name={{ item }} state=installed
   with_items:
@@ -128,7 +127,7 @@
   sudo_user: app 
 
 - name: Create fish configuration file
-  copy: src=files/fish/config.fish dest=~/.config/fish/config.fish owner=app group=worker
+  template: src=files/fish/config.fish dest=~/.config/fish/config.fish owner=app group=worker
   sudo_user: app
 
 - name: Set fish as the default shell
