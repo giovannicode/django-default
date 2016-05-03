@@ -115,3 +115,22 @@
 
 - name: Restart supervisor
   command: service supervisor restart
+
+# Setup the fish shell with shortcuts
+- name: Add the fish shell ppa 
+  apt_repository: repo='ppa:fish-shell/release-2'
+
+- name: Install fish
+  apt: name=fish state=installed
+
+- name: Create fish config directory
+  file: path=~/.config/fish state=directory owner=app group=worker
+  sudo_user: app 
+
+- name: Create fish configuration file
+  copy: src=files/fish/config.fish dest=~/.config/fish/config.fish owner=app group=worker
+  sudo_user: app
+
+- name: Set fish as the default shell
+  user: name=app shell=/usr/bin/fish
+  sudo: yes
