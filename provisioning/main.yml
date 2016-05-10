@@ -51,7 +51,7 @@
       pip: virtualenv=/app/env requirements=/app/src/requirements.txt
 
     - name: Make sure manage.py is executable
-      file: path=/app/src/{{ project_name }}/{{ project_name }}/manage.py mode="u+x"
+      file: path=/app/src/{{ project_name }}/manage.py mode="u+x"
 
     - name: Migrate models into database
       django_manage: virtualenv=/app/env/ app_path=/app/src/{{ project_name }}/ command=migrate
